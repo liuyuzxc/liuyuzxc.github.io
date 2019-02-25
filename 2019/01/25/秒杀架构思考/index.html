@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content>
+  <meta name="author" content="Liuyu">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="秒杀架构思考">
+  <meta property="og:description" content>
+  <meta property="og:site_name" content="Liuyu&#39;s Blog">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="http://yoursite.com">
+  
+    <link rel="alternate" href="/atom.xml" title="Liuyu&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>Liuyu's Blog</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">秒杀架构思考</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Liuyu</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2019-01-25</span>
+            <span class="time">21:06:15</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/架构-秒杀/">#架构,秒杀</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>尽量将请求拦截在数据库的上游，因为一旦大量请求进入数据库，性能会急剧下降</p>
+<h2 id="架构和实现细节"><a href="#架构和实现细节" class="headerlink" title="架构和实现细节"></a>架构和实现细节</h2><ul>
+<li>前端模块（页面静态化、CDN、客户端缓存）</li>
+<li>排队模块（Redis、队列实现异步下单）</li>
+<li>服务模块（事务处理业务逻辑、避免并发问题）</li>
+<li>防刷模块（验证码、限IP）</li>
+</ul>
+<h2 id="模块解析"><a href="#模块解析" class="headerlink" title="模块解析"></a>模块解析</h2><h3 id="前端模块"><a href="#前端模块" class="headerlink" title="前端模块"></a>前端模块</h3><ol>
+<li>页面静态化，将后台渲染模板的方式改成使用HTML文件与AJAX异步请求的方式，减少服务端渲染开销，同时将秒杀页面提前放到CDN</li>
+<li>客户端缓存，配置Cache-Control来让客户端缓存一定时间页面，提升用户体验</li>
+<li>静态资源优化，CSS/JS/图片压缩，提升用户体验</li>
+</ol>
+<h3 id="排队模块"><a href="#排队模块" class="headerlink" title="排队模块"></a>排队模块</h3><ol>
+<li>对Redis中的抢购对象预减库存，然后立即返回抢购成功请用户等待，这里利用了Redis将大部分请求拦截住，少部分流量进入下一阶段</li>
+<li>如果参与秒杀的商品太多，进入下一阶段的流量依然比较大，则需要使用消息队列，Redis过滤之后的请求直接放入到消息队列，让消息队列进行流量的第二次削峰</li>
+</ol>
+<h3 id="服务模块"><a href="#服务模块" class="headerlink" title="服务模块"></a>服务模块</h3><ol>
+<li>消息队列的消费者，业务逻辑是使用事务控制对数据库的下订单，减库存操作，且下订单操作要放到减库存操作之前，可以避免减库存update的行锁持有时间</li>
+</ol>
+<h3 id="防刷模块"><a href="#防刷模块" class="headerlink" title="防刷模块"></a>防刷模块</h3><ol>
+<li>针对恶意用户写脚本去刷，在Redis中保存用户IP与商品ID进行限制</li>
+<li>针对普通用户疯狂的点击，使用JS控制抢购按钮，每几秒才能点击一次</li>
+<li>在后台生成数学计算型的验证码，使用Graphics、BufferedImage实现图片，ScriptEngineManager计算表达式</li>
+</ol>
+<h3 id="异常流程的处理"><a href="#异常流程的处理" class="headerlink" title="异常流程的处理"></a>异常流程的处理</h3><ol>
+<li>如果在秒杀的过程中由于服务崩溃导致秒杀活动中断，那么没有好的办法，只能立即尝试恢复崩溃服务或者申请另寻时间重新进行秒杀活动</li>
+<li>如果在下订单的过程中由于用户的某些限制导致下单失败，那么应该回滚事务，立即告诉用户失败原因</li>
+</ol>
+<h2 id="难点-坑-复盘优化"><a href="#难点-坑-复盘优化" class="headerlink" title="难点+坑+复盘优化"></a>难点+坑+复盘优化</h2><h3 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h3><ol>
+<li>理解整个架构设计的思路，围绕这个思路进行思考有什么方式可以做到，在开发过程中多进行压力测试反馈优化</li>
+<li>代码中异常情况的处理与业务上应急预案的准备</li>
+</ol>
+<h3 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h3><ol>
+<li>以上的解决方案能通过利用Redis与消息队列集群来承载非常高的并发量，但是运维成本高。比如Redis与消息队列都必须用到集群才能保证稳定性，会导致运维成本太高。所以需要有专业的运维团队维护。</li>
+<li>避免同一用户同时下多个订单，需要写好业务逻辑或在订单表中加上用户ID与商品ID的唯一索引；避免卖超问题，在更新数量的sql上需要加上&gt;0条件</li>
+</ol>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><ol>
+<li>将7层负载均衡Nginx与4层负载均衡LVS一起使用进一步提高并发量</li>
+<li>以上是应用架构上的优化，在部署的Redis、消息队列、数据库、虚拟机偏向选择带宽与硬盘读写速度高的</li>
+<li>提前预热，将最新的静态资源同步更新到CDN的所有节点上，在Redis中提前加载好需要售卖的产品信息</li>
+<li>使用分布式限流减少Redis访问压力，在Nginx中配置并发连接数与速度限制，但如果有很多不同的活动同时进行则不适用</li>
+</ol>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        </p><p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

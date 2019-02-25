@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content>
+  <meta name="author" content="Liuyu">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="一致性Hash">
+  <meta property="og:description" content>
+  <meta property="og:site_name" content="Liuyu&#39;s Blog">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="http://yoursite.com">
+  
+    <link rel="alternate" href="/atom.xml" title="Liuyu&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>Liuyu's Blog</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">一致性Hash</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Liuyu</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2018-11-21</span>
+            <span class="time">21:06:15</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/分布式-一致性Hash/">#分布式,一致性Hash</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h1 id="一致-Hash-算法"><a href="#一致-Hash-算法" class="headerlink" title="一致 Hash 算法"></a>一致 Hash 算法</h1><p>分布式缓存中，如何将数据均匀的分散到各个节点中，并且尽量的在加减节点时能使受影响的数据最少。</p>
+<h2 id="Hash-取模"><a href="#Hash-取模" class="headerlink" title="Hash 取模"></a>Hash 取模</h2><p>随机放置就不说了，会带来很多问题。通常最容易想到的方案就是 <code>hash 取模</code>了。</p>
+<p>可以将传入的 Key 按照 <code>index = hash(key) % N</code> 这样来计算出需要存放的节点。其中 hash 函数是一个将字符串转换为正整数的哈希映射方法，N 就是节点的数量。</p>
+<p>这样可以满足数据的均匀分配，但是这个算法的容错性和扩展性都较差。</p>
+<p>比如增加或删除了一个节点时，所有的 Key 都需要重新计算，显然这样成本较高，为此需要一个算法满足分布均匀同时也要有良好的容错性和拓展性。</p>
+<h2 id="一致-Hash-算法-1"><a href="#一致-Hash-算法-1" class="headerlink" title="一致 Hash 算法"></a>一致 Hash 算法</h2><p>一致 Hash 算法是将所有的哈希值构成了一个环，其范围在 <code>0 ~ 2^32-1</code>。如下图：</p>
+<p><img src="https://github.com/xbox1994/2018-Java-Interview/raw/master/images/一致性hash1.jpg" alt></p>
+<p>之后将各个节点散列到这个环上，可以用节点的 IP、hostname 这样的唯一性字段作为 Key 进行 <code>hash(key)</code>，散列之后如下：</p>
+<p><img src="https://github.com/xbox1994/2018-Java-Interview/raw/master/images/一致性hash2.jpg" alt></p>
+<p>之后需要将数据定位到对应的节点上，使用同样的 <code>hash 函数</code> 将 Key 也映射到这个环上。</p>
+<p><img src="https://github.com/xbox1994/2018-Java-Interview/raw/master/images/一致性hash3.jpg" alt></p>
+<p>这样按照顺时针方向就可以把 k1 定位到 <code>N1节点</code>，k2 定位到 <code>N3节点</code>，k3 定位到 <code>N2节点</code>。</p>
+<h3 id="容错性"><a href="#容错性" class="headerlink" title="容错性"></a>容错性</h3><p>这时假设 N1 宕机了：</p>
+<p><img src="https://github.com/xbox1994/2018-Java-Interview/raw/master/images/一致性hash4.jpg" alt></p>
+<p>依然根据顺时针方向，k2 和 k3 保持不变，只有 k1 被重新映射到了 N3。这样就很好的保证了容错性，当一个节点宕机时只会影响到少少部分的数据。</p>
+<h3 id="拓展性"><a href="#拓展性" class="headerlink" title="拓展性"></a>拓展性</h3><p>当新增一个节点时:</p>
+<p><img src="https://github.com/xbox1994/2018-Java-Interview/raw/master/images/一致性hash5.jpg" alt></p>
+<p>在 N2 和 N3 之间新增了一个节点 N4 ，这时会发现受印象的数据只有 k3，其余数据也是保持不变，所以这样也很好的保证了拓展性。</p>
+<h2 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h2><p>到目前为止该算法依然也有点问题:</p>
+<p>当节点较少时会出现数据分布不均匀的情况：</p>
+<p><img src="https://github.com/xbox1994/2018-Java-Interview/raw/master/images/一致性hash6.jpg" alt></p>
+<p>这样会导致大部分数据都在 N1 节点，只有少量的数据在 N2 节点。</p>
+<p>为了解决这个问题，一致哈希算法引入了虚拟节点。将每一个节点都进行多次 hash，生成多个节点放置在环上称为虚拟节点:</p>
+<p><img src="https://github.com/xbox1994/2018-Java-Interview/raw/master/images/一致性hash7.jpg" alt></p>
+<p>计算时可以在 IP 后加上编号来生成哈希值。</p>
+<p>这样只需要在原有的基础上多一步由虚拟节点映射到实际节点的步骤即可让少量节点也能满足均匀性。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        </p><p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

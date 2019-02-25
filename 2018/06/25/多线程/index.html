@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content>
+  <meta name="author" content="Liuyu">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="多线程">
+  <meta property="og:description" content>
+  <meta property="og:site_name" content="Liuyu&#39;s Blog">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="http://yoursite.com">
+  
+    <link rel="alternate" href="/atom.xml" title="Liuyu&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>Liuyu's Blog</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">多线程</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Liuyu</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2018-06-25</span>
+            <span class="time">21:06:15</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/Java基础/">#Java基础</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><h3 id="线程的生命周期"><a href="#线程的生命周期" class="headerlink" title="线程的生命周期"></a>线程的生命周期</h3><p>新建 – 就绪 – 运行 – 阻塞 – 就绪 – 运行 – 死亡</p>
+<p><img src="https://github.com/xbox1994/2018-Java-Interview/raw/master/images/j13.png" alt></p>
+<h3 id="问：你怎么理解多线程的"><a href="#问：你怎么理解多线程的" class="headerlink" title="问：你怎么理解多线程的"></a>问：你怎么理解多线程的</h3><ol>
+<li>定义：多线程是指从软件或者硬件上实现多个线程并发执行的技术。具有多线程能力的计算机因有硬件支持而能够在同一时间执行多于一个线程，进而提升整体处理性能。</li>
+<li>存在的原因：因为单线程处理能力低。打个比方，一个人去搬砖与几个人去搬砖，一个人只能同时搬一车，但是几个人可以同时一起搬多个车。</li>
+<li>实现：在Java里如何实现线程，Thread、Runnable、Callable。</li>
+<li>问题：线程可以获得更大的吞吐量，但是开销很大，线程栈空间的大小、切换线程需要的时间，所以用到线程池进行重复利用，当线程使用完毕之后就放回线程池，避免创建与销毁的开销。</li>
+</ol>
+<h3 id="线程间通信的方式"><a href="#线程间通信的方式" class="headerlink" title="线程间通信的方式"></a>线程间通信的方式</h3><ol>
+<li>等待通知机制 wait()、notify()、join()、interrupted()</li>
+<li>并发工具synchronized、lock、CountDownLatch、CyclicBarrier、Semaphore</li>
+</ol>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><h4 id="锁是什么"><a href="#锁是什么" class="headerlink" title="锁是什么"></a>锁是什么</h4><p>锁是在不同线程竞争资源的情况下来分配不同线程执行方式的同步控制工具，只有线程获取到锁之后才能访问同步代码，否则等待其他线程使用结束后释放锁</p>
+<h4 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a><a href="https://mp.weixin.qq.com/s/0qyNS6wQUShhJHoMuyziMg" target="_blank" rel="noopener">synchronized</a></h4><p>通常和wait，notify，notifyAll一块使用。<br>wait：释放占有的对象锁，释放CPU，进入等待队列只能通过notify/all继续该线程。<br>sleep：则是释放CPU，但是不释放占有的对象锁，可以在sleep结束后自动继续该线程。<br>notify：唤醒等待队列中的一个线程，使其获得锁进行访问。<br>notifyAll：唤醒等待队列中等待该对象锁的全部线程，让其竞争去获得锁。</p>
+<h4 id="lock"><a href="#lock" class="headerlink" title="lock"></a>lock</h4><p>拥有synchronize相同的语义，但是添加一些其他特性，如中断锁等候和定时锁等候，所以可以使用lock代替synchronize，但必须手动加锁释放锁</p>
+<h4 id="两者的区别"><a href="#两者的区别" class="headerlink" title="两者的区别"></a>两者的区别</h4><ul>
+<li>性能：资源竞争激烈的情况下，lock性能会比synchronized好；如果竞争资源不激烈，两者的性能是差不多的</li>
+<li>用法：synchronized可以用在代码块上，方法上。lock通过代码实现，有更精确的线程语义，但需要手动释放，还提供了多样化的同步，比如公平锁、有时间限制的同步、可以被中断的同步</li>
+<li>原理：synchronized在JVM级别实现，会在生成的字节码中加上monitorenter和monitorexit，任何对象都有一个monitor与之相关联，当且一个monitor被持有之后，他将处于锁定状态。monitor是JVM的一个同步工具，synchronized还通过内存指令屏障来保证共享变量的可见性。lock使用AQS在代码级别实现，通过Unsafe.park调用操作系统内核进行阻塞</li>
+<li>功能：比如ReentrantLock功能更强大<ol>
+<li>ReentrantLock可以指定是公平锁还是非公平锁，而synchronized只能是非公平锁，所谓的公平锁就是先等待的线程先获得锁</li>
+<li>ReentrantLock提供了一个Condition（条件）类，用来实现分组唤醒需要唤醒的线程们，而不是像synchronized要么随机唤醒一个线程要么唤醒全部线程</li>
+<li>ReentrantLock提供了一种能够中断等待锁的线程的机制，通过lock.lockInterruptibly()来实现这个机制</li>
+</ol>
+</li>
+</ul>
+<p><strong>我们写同步的时候，优先考虑synchronized，如果有特殊需要，再进一步优化。ReentrantLock和Atomic如果用的不好，不仅不能提高性能，还可能带来灾难。</strong></p>
+<h3 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h3><p>功能：</p>
+<ol>
+<li>主内存和工作内存，直接与主内存产生交互，进行读写操作，保证可见性；</li>
+<li>禁止 JVM 进行的指令重排序。</li>
+</ol>
+<h3 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h3><p>使用<code>ThreadLocal&lt;UserInfo&gt; userInfo = new ThreadLocal&lt;UserInfo&gt;()</code>的方式，让每个线程内部都会维护一个ThreadLocalMap，里边包含若干了 Entry（K-V 键值对），每次存取都会先获取到当前线程ID，然后得到该线程对象中的Map，然后与Map交互。</p>
+<h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><h4 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h4><p>new Thread弊端：</p>
+<ul>
+<li>每次启动线程都需要new Thread新建对象与线程，性能差。线程池能重用存在的线程，减少对象创建、回收的开销。</li>
+<li>线程缺乏统一管理，可以无限制的新建线程，导致OOM。线程池可以控制可以创建、执行的最大并发线程数。</li>
+<li>缺少工程实践的一些高级的功能如定期执行、线程中断。线程池提供定期执行、并发数控制功能</li>
+</ul>
+<h4 id="线程池时核心参数"><a href="#线程池时核心参数" class="headerlink" title="线程池时核心参数"></a>线程池时核心参数</h4><ul>
+<li>corePoolSize：核心线程数量，线程池中应该常驻的线程数量</li>
+<li>maximumPoolSize：线程池允许的最大线程数，非核心线程在超时之后会被清除</li>
+<li>workQueue：阻塞队列，存储等待执行的任务</li>
+<li>keepAliveTime：线程没有任务执行时可以保持的时间</li>
+<li>unit：时间单位</li>
+<li>threadFactory：线程工厂，来创建线程</li>
+<li>rejectHandler：当拒绝任务提交时的策略（抛异常、用调用者所在的线程执行任务、丢弃队列中第一个任务执行当前任务、直接丢弃任务）</li>
+</ul>
+<h4 id="创建线程的逻辑"><a href="#创建线程的逻辑" class="headerlink" title="创建线程的逻辑"></a>创建线程的逻辑</h4><p>以下任务提交逻辑来自ThreadPoolExecutor.execute方法：  </p>
+<ol>
+<li>如果运行的线程数 &lt; corePoolSize，直接创建新线程，即使有其他线程是空闲的</li>
+<li>如果运行的线程数 &gt;= corePoolSize<br> 2.1 如果插入队列成功，则完成本次任务提交，但不创建新线程<br> 2.2 如果插入队列失败，说明队列满了  <pre><code>2.2.1 如果当前线程数 &lt; maximumPoolSize，创建新的线程放到线程池中  
+2.2.2 如果当前线程数 &gt;= maximumPoolSize，会执行指定的拒绝策略
+</code></pre></li>
+</ol>
+<h4 id="阻塞队列的策略"><a href="#阻塞队列的策略" class="headerlink" title="阻塞队列的策略"></a><a href="https://blog.csdn.net/hayre/article/details/53291712" target="_blank" rel="noopener">阻塞队列的策略</a></h4><ul>
+<li>直接提交。SynchronousQueue是一个没有数据缓冲的BlockingQueue，生产者线程对其的插入操作put必须等待消费者的移除操作take。将任务直接提交给线程而不保持它们。</li>
+<li>无界队列。当使用无限的 maximumPoolSizes 时，将导致在所有corePoolSize线程都忙时新任务在队列中等待。</li>
+<li>有界队列。当使用有限的 maximumPoolSizes 时，有界队列（如ArrayBlockingQueue）有助于防止资源耗尽，但是可能较难调整和控制。</li>
+</ul>
+<h3 id="并发包工具类"><a href="#并发包工具类" class="headerlink" title="并发包工具类"></a>并发包工具类</h3><h4 id="CountDownLatch"><a href="#CountDownLatch" class="headerlink" title="CountDownLatch"></a>CountDownLatch</h4><p>计数器闭锁是一个能阻塞主线程，让其他线程满足特定条件下主线程再继续执行的线程同步工具。</p>
+<p><img src="https://github.com/xbox1994/2018-Java-Interview/raw/master/images/countdownlatch.png" alt><br>图中，A为主线程，A首先设置计数器的数到AQS的state中，当调用await方法之后，A线程阻塞，随后每次其他线程调用countDown的时候，将state减1，直到计数器为0的时候，A线程继续执行。</p>
+<p>使用场景:<br>并行计算：把任务分配给不同线程之后需要等待所有线程计算完成之后主线程才能汇总得到最终结果<br>模拟并发：可以作为并发次数的统计变量，当任意多个线程执行完成并发任务之后统计一次即可  </p>
+<h4 id="Semaphore"><a href="#Semaphore" class="headerlink" title="Semaphore"></a>Semaphore</h4><p>信号量是一个能阻塞线程且能控制统一时间请求的并发量的工具。比如能保证同时执行的线程最多200个，模拟出稳定的并发量。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CountDownLatchTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ExecutorService executorService = Executors.newCachedThreadPool();</span><br><span class="line">        Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">3</span>); <span class="comment">//配置只能发布3个运行许可证</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> finalI = i;</span><br><span class="line">            executorService.execute(() -&gt; &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    semaphore.acquire(<span class="number">3</span>); <span class="comment">//获取3个运行许可，如果获取不到会一直等待，使用tryAcquire则不会等待</span></span><br><span class="line">                    Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">                    System.out.println(finalI);</span><br><span class="line">                    semaphore.release(<span class="number">3</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">        executorService.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于同时获取3个许可，所以即使开启了100个线程，但是每秒只能执行一个任务</p>
+<p>使用场景:<br>数据库连接并发数，如果超过并发数，等待（acqiure）或者抛出异常（tryAcquire）  </p>
+<h4 id="CyclicBarrier"><a href="#CyclicBarrier" class="headerlink" title="CyclicBarrier"></a>CyclicBarrier</h4><p>可以让一组线程相互等待，当每个线程都准备好之后，所有线程才继续执行的工具类</p>
+<p><img src="https://github.com/xbox1994/2018-Java-Interview/raw/master/images/cyclicbarrier.png" alt></p>
+<p>与CountDownLatch类似，都是通过计数器实现的，当某个线程调用await之后，计数器减1，当计数器大于0时将等待的线程包装成AQS的Node放入等待队列中，当计数器为0时将等待队列中的Node拿出来执行。</p>
+<p>与CountDownLatch的区别：  </p>
+<ol>
+<li>CountDownLatch是一个线程等其他线程，CyclicBarrier是多个线程相互等待</li>
+<li>CyclicBarrier的计数器能重复使用，调用多次</li>
+</ol>
+<p>使用场景：<br>有四个游戏玩家玩游戏，游戏有三个关卡，每个关卡必须要所有玩家都到达后才能允许通过。其实这个场景里的玩家中如果有玩家A先到了关卡1，他必须等到其他所有玩家都到达关卡1时才能通过，也就是说线程之间需要相互等待。</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        </p><p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content>
+  <meta name="author" content="Liuyu">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="服务容错保护">
+  <meta property="og:description" content>
+  <meta property="og:site_name" content="Liuyu&#39;s Blog">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="http://yoursite.com">
+  
+    <link rel="alternate" href="/atom.xml" title="Liuyu&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>Liuyu's Blog</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/default-banner-dark.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">服务容错保护</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/<your-github-username>">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:<your-email-address>">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Liuyu</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2018-12-20</span>
+            <span class="time">21:06:15</span>
+          </span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/微服务-容错/">#微服务,容错</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <h2 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h2><p>服务降级类似女生旅行：在用户访问量高峰期，整体资源面临不足的时候，将一些重要优先程度相对较低的服务先关掉，等到过了高峰期再恢复。比如京东商城在双十一期间，可能会对评论服务进行服务降级。</p>
+<p>回到微服务系统，服务A调用服务B，当我们对服务B进行降级后，服务A将直接调用预定义的降级逻辑（即方法调用代替跨服务请求），从而快速获取返回结果，而降级方法逻辑的返回结果与真实服务B的返回结果的区别 就好比 残次品与良品的区别，此时我们认为服务B所提供的服务质量降低了，即我所说的降级。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 主逻辑</span></span><br><span class="line"><span class="meta">@FeignClient</span>(value = <span class="string">"mst-goods-service"</span>, fallback = GoodClientFallback.class)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">GoodsClient</span> </span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping</span>(method = RequestMethod.GET, path = <span class="string">"/api/goods/&#123;goods_id&#125;"</span>)</span><br><span class="line">    <span class="function">GoodsDTO <span class="title">getOne</span><span class="params">(@PathVariable(<span class="string">"goods_id"</span>)</span> Long goodsId)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 降级逻辑</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GoodClientFallback</span> <span class="keyword">implements</span> <span class="title">GoodsClient</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> GoodsDTO <span class="title">getOne</span><span class="params">(Long goodsId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> GoodsDTO(<span class="number">1l</span>, <span class="number">12.3</span>, <span class="number">2l</span>, <span class="string">"name"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="服务熔断"><a href="#服务熔断" class="headerlink" title="服务熔断"></a>服务熔断</h2><p>在分布式架构中，断路器模式的作用也是类似的，如果某个目标服务调用慢或者有大量超时，此时，熔断该服务的调用，对于后续调用请求，不再调用目标服务，直接返回结果，快速释放资源，避免最终因为服务不可用蔓延导致系统雪崩灾难。</p>
+<h3 id="断路器什么时候会打开"><a href="#断路器什么时候会打开" class="headerlink" title="断路器什么时候会打开"></a>断路器什么时候会打开</h3><p>这里涉及到断路器的三个重要参数：</p>
+<ol>
+<li>快照时间窗：断路器确定是否需要统计一些请求和错误数据，而统计的时间范围就是快照时间窗，默认10秒</li>
+<li>请求总数下限：在快照时间窗内，必须满足请求总数下限才会启用熔断。默认20，意味着在10秒内，如果调用不足20次，即便所有的请求都失败，断路器都不会打开</li>
+<li>错误百分比下限：当请求总数在快照时间内超过了下限，比如发生了30次调用，如果在这 30次调用中，有16次发生了超时异常，也就是超过50%的错误百分比，在默认设定50%下限的情况下，断路器就会打开</li>
+</ol>
+<h3 id="断路器打开之后发生什么"><a href="#断路器打开之后发生什么" class="headerlink" title="断路器打开之后发生什么"></a>断路器打开之后发生什么</h3><p>熔断打开之后，再有请求调用的时候，将不会调用主逻辑，而是直接调用降级逻辑，这个时候就会快速返回，而不是等待5秒后才返回fallback。通过断路器实现了自动发现错误并将降级逻辑切换为主逻辑，减少响应延迟的效果</p>
+<h3 id="主逻辑如何恢复"><a href="#主逻辑如何恢复" class="headerlink" title="主逻辑如何恢复"></a>主逻辑如何恢复</h3><p>Hystrix会启动一个休眠时间窗，在这个时间窗内，降级逻辑是临时的成为主逻辑，当休眠时间窗到期，断路器就进入半开状态，释放一次请求到原来的主逻辑上。如果此次请求正常返回，那么断路器将会关闭，主逻辑恢复正常。否则，断路器继续保持打开状态，而休眠时间窗会重新计时</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        </p><p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+
