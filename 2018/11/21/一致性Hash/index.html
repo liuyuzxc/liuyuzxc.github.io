@@ -100,8 +100,14 @@
           <!-- Date -->
           <span class="date-time info">On
             <span class="date">2018-11-21</span>
-            <span class="time">11:40:48</span>
+            <span class="time">11:56:13</span>
           </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/分布式/">分布式</a> / <a href="/categories/分布式/一致性Hash/">一致性Hash</a>
+</span>
           
         </div>
         <!-- Tags -->
@@ -109,14 +115,15 @@
           <div class="post-tags text-muted">
             Tags: 
 
-<a class="tag" href="/tags/分布式-一致性Hash/">#分布式,一致性Hash</a>
+<a class="tag" href="/tags/分布式/">#分布式</a> <a class="tag" href="/tags/一致性Hash/">#一致性Hash</a>
 
 
           </div>
         
         <!-- Post Main Content -->
         <div class="post-content">
-          <h1 id="一致-Hash-算法"><a href="#一致-Hash-算法" class="headerlink" title="一致 Hash 算法"></a>一致 Hash 算法</h1><p>分布式缓存中，如何将数据均匀的分散到各个节点中，并且尽量的在加减节点时能使受影响的数据最少。</p>
+          <p>分析下一致性Hash算法<br><a id="more"></a></p>
+<h1 id="一致-Hash-算法"><a href="#一致-Hash-算法" class="headerlink" title="一致 Hash 算法"></a>一致 Hash 算法</h1><p>分布式缓存中，如何将数据均匀的分散到各个节点中，并且尽量的在加减节点时能使受影响的数据最少。</p>
 <h2 id="Hash-取模"><a href="#Hash-取模" class="headerlink" title="Hash 取模"></a>Hash 取模</h2><p>随机放置就不说了，会带来很多问题。通常最容易想到的方案就是 <code>hash 取模</code>了。</p>
 <p>可以将传入的 Key 按照 <code>index = hash(key) % N</code> 这样来计算出需要存放的节点。其中 hash 函数是一个将字符串转换为正整数的哈希映射方法，N 就是节点的数量。</p>
 <p>这样可以满足数据的均匀分配，但是这个算法的容错性和扩展性都较差。</p>

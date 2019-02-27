@@ -100,8 +100,14 @@
           <!-- Date -->
           <span class="date-time info">On
             <span class="date">2018-12-20</span>
-            <span class="time">11:40:48</span>
+            <span class="time">11:56:13</span>
           </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/微服务/">微服务</a> / <a href="/categories/微服务/容错/">容错</a>
+</span>
           
         </div>
         <!-- Tags -->
@@ -109,14 +115,15 @@
           <div class="post-tags text-muted">
             Tags: 
 
-<a class="tag" href="/tags/微服务-容错/">#微服务,容错</a>
+<a class="tag" href="/tags/微服务/">#微服务</a> <a class="tag" href="/tags/容错/">#容错</a>
 
 
           </div>
         
         <!-- Post Main Content -->
         <div class="post-content">
-          <h2 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h2><p>服务降级类似女生旅行：在用户访问量高峰期，整体资源面临不足的时候，将一些重要优先程度相对较低的服务先关掉，等到过了高峰期再恢复。比如京东商城在双十一期间，可能会对评论服务进行服务降级。</p>
+          <p>SpringCloud下的服务降级<br><a id="more"></a></p>
+<h2 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h2><p>服务降级类似女生旅行：在用户访问量高峰期，整体资源面临不足的时候，将一些重要优先程度相对较低的服务先关掉，等到过了高峰期再恢复。比如京东商城在双十一期间，可能会对评论服务进行服务降级。</p>
 <p>回到微服务系统，服务A调用服务B，当我们对服务B进行降级后，服务A将直接调用预定义的降级逻辑（即方法调用代替跨服务请求），从而快速获取返回结果，而降级方法逻辑的返回结果与真实服务B的返回结果的区别 就好比 残次品与良品的区别，此时我们认为服务B所提供的服务质量降低了，即我所说的降级。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 主逻辑</span></span><br><span class="line"><span class="meta">@FeignClient</span>(value = <span class="string">"mst-goods-service"</span>, fallback = GoodClientFallback.class)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">GoodsClient</span> </span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping</span>(method = RequestMethod.GET, path = <span class="string">"/api/goods/&#123;goods_id&#125;"</span>)</span><br><span class="line">    <span class="function">GoodsDTO <span class="title">getOne</span><span class="params">(@PathVariable(<span class="string">"goods_id"</span>)</span> Long goodsId)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 降级逻辑</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GoodClientFallback</span> <span class="keyword">implements</span> <span class="title">GoodsClient</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> GoodsDTO <span class="title">getOne</span><span class="params">(Long goodsId)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> GoodsDTO(<span class="number">1l</span>, <span class="number">12.3</span>, <span class="number">2l</span>, <span class="string">"name"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="服务熔断"><a href="#服务熔断" class="headerlink" title="服务熔断"></a>服务熔断</h2><p>在分布式架构中，断路器模式的作用也是类似的，如果某个目标服务调用慢或者有大量超时，此时，熔断该服务的调用，对于后续调用请求，不再调用目标服务，直接返回结果，快速释放资源，避免最终因为服务不可用蔓延导致系统雪崩灾难。</p>

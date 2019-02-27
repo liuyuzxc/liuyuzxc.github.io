@@ -100,8 +100,14 @@
           <!-- Date -->
           <span class="date-time info">On
             <span class="date">2019-01-25</span>
-            <span class="time">11:40:48</span>
+            <span class="time">11:56:13</span>
           </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/架构/">架构</a> / <a href="/categories/架构/秒杀/">秒杀</a>
+</span>
           
         </div>
         <!-- Tags -->
@@ -109,14 +115,15 @@
           <div class="post-tags text-muted">
             Tags: 
 
-<a class="tag" href="/tags/架构-秒杀/">#架构,秒杀</a>
+<a class="tag" href="/tags/架构/">#架构</a> <a class="tag" href="/tags/秒杀/">#秒杀</a>
 
 
           </div>
         
         <!-- Post Main Content -->
         <div class="post-content">
-          <h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>尽量将请求拦截在数据库的上游，因为一旦大量请求进入数据库，性能会急剧下降</p>
+          <p>对秒杀架构下的一些常用技术思考<br><a id="more"></a></p>
+<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>尽量将请求拦截在数据库的上游，因为一旦大量请求进入数据库，性能会急剧下降</p>
 <h2 id="架构和实现细节"><a href="#架构和实现细节" class="headerlink" title="架构和实现细节"></a>架构和实现细节</h2><ul>
 <li>前端模块（页面静态化、CDN、客户端缓存）</li>
 <li>排队模块（Redis、队列实现异步下单）</li>
