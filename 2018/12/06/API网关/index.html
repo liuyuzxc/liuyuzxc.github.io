@@ -1,117 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>核酸疫苗服务查询</title>
+<head>
+    <meta charset="UTF-8">
+    <title>核酸疫苗服务查询</title>
 
-        <style type="text/css">
-/*             div.dyTime {
-                position: absolute;
-                color: black;
+    <style type="text/css">
+        div.xingming {
+            position: absolute;
+            font-family: STHeiti;
+            font-size: 50px;
+            height: 300px;
+            width: 1000px;
+            top: 1050px;
+            left: 130px
+        }
+        div.shenfenzheng {
+            position: absolute;
+            font-family: STHeiti;
+            font-size: 50px;
+            height: 300px;
+            width: 1000px;
+            top: 1150px;
+            left: 130px
+        }
 
-                /*font-weight: bold;*/
-                font-family: STHeiti;
-                font-size: 40px;
-                height: 300px;
-                width: 1000px;
-                top: 1100px;
-                left: 120px
-            } */
-        </style>
+        div.yinxing {
+            position: absolute;
 
-    </head>
-    <body>
-        <div>
-            <div>
-                 <img src="/img/hesuanfuwu.jpeg" />
-            </div>
-            <div class='dyTime'>
-                <p>姓名：刘宇</p>
-                <p>房号：A8-3-603</p>
-                <p id="dateTime"></p>
-            </div>
+            font-weight: bold;
+            font-family: STHeiti;
+            font-size: 200px;
+            height: 300px;
+            width: 1000px;
+            top: 1320px;
+            left: 350px
+        }
+        div.jigou {
+            position: absolute;
+            /*font-weight: bold;*/
+            font-family: STHeiti;
+            font-size: 50px;
+            height: 300px;
+            width: 1000px;
+            top: 1700px;
+            left: 130px
+        }
+        div.shijian {
+            position: absolute;
+            /*font-weight: bold;*/
+            font-family: STHeiti;
+            font-size: 50px;
+            height: 300px;
+            width: 1000px;
+            top: 1800px;
+            left: 130px
+        }
+    </style>
+
+</head>
+<body>
+<div>
+    <div>
+        <div class="xingming ">
+            姓名
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            刘**
+        </div>
+        <div class="shenfenzheng ">
+            身份证号
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            23**************1X
+        </div>
+
+        <img src="./hesuanfuwu2.jpeg" />
+        <div id="blink" class="yinxing">阴性</div>
+
+        <div class="huise jigou">
+            核酸检测机构
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            北京吉因加医学检验室
+        </div>
+        <div class="heise shijian">
+            核酸检测时间
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            2022-01-30 18:48:51
         </div>
 
 
-        <script>
-           
-        </script>
-
-    </body>
-
-
-</html>
-
-
-
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html>
-  <!-- Html Head Tag-->
-  <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content>
-  <meta name="author" content="Liuyu">
-  <!-- Open Graph Data -->
-  <meta property="og:title" content="API网关">
-  <meta property="og:description" content>
-  <meta property="og:site_name" content="Liuyu&#39;s Blog">
-  <meta property="og:type" content="article">
-  <meta property="og:image" content="http://yoursite.com">
-  
-    <link rel="alternate" href="/atom.xml" title="Liuyu&#39;s Blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-
-  <!-- Site Title -->
-  <title>核酸疫苗服务查询</title>
-
-  <!-- Bootstrap CSS -->
-  <link rel="
-             sheet" href="/css/bootstrap.min.css">
-  <!-- Custom CSS -->
-  
-  <link rel="stylesheet" href="/css/style.light.css">
-
-  <!-- Google Analytics -->
-<!--   <header class="site-header header-background" style="background-image: url(/img/hesuanfuwu.jpeg)"> -->
-    
-<body style="background-image: url(/img/hesuanfuwu.jpeg)">
-  <div class="container">
-    <div class="row" style="background-image: url(/img/hesuanfuwu.jpeg)">
-      <div class="col-lg-12" >
-        
-        <!-- Post Main Content -->
-        <div >
-<!--           <img src="/img/hesuanfuwu.jpeg" /> -->
-                     
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
 
-
-    <!-- After Footer Scripts -->
-<script src="/js/highlight.pack.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function(event) {
-    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
-    codeBlocks.forEach(function(block, index) {
-      hljs.highlightBlock(block);
-    });
-  });
+    function changeColor(){
+        var color="#FFC|#DE990A|#F93|#FC0|#F96|#CC6";
+        color=color.split("|");
+        document.getElementById("blink").style.color=color[parseInt(Math.random() * color.length)];
+    }
+    setInterval("changeColor()",200);
 </script>
 
-  </body>
+</body>
+
+
 </html>
 
- -->
+
+
